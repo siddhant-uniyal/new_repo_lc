@@ -1,0 +1,27 @@
+const int SZ = 25*26 + 26;
+int occ[SZ];
+class Solution {
+public:
+    int longestPalindrome(vector<string>& words) {
+        /*
+        xy -> yx or xx -> xx
+        and xx in the middle
+        */
+        memset(occ , 0 , sizeof(occ));
+        int ans = 0;
+        auto hash = [&](char x , char y) -> int{
+            return (x - 'a') * 26 + y - 'a';
+        };
+        int middle = 0;
+        for(auto &s : words){
+            int req = hash(s[1] , s[0]);
+            if(occ[req]){
+                ans += 4;
+                --occ[req];
+                if(s[1] == s[0] && occ[req] == 0) middle = 0;
+            }
+            else ++occ[hash(s[0] , s[1])] , middle = 2*(s[1] == s[0]);
+        }
+        return ans + middle;
+    }
+};
